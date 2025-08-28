@@ -38,6 +38,28 @@ A well-structured project makes automation:
 
 ### ▶️ Run in GitHub Codespaces
 1. Click **Open in Codespaces** (button above).
+2. If you see errors about Ansible not finding your config or failing to create temp directories, check:
+   - The workspace directory is **not world-writable**. Run: `chmod o-w .`
+   - The `ansible.cfg` file contains:
+     ```ini
+     [defaults]
+     remote_tmp = /tmp/.ansible/tmp
+     ```
+3. If you see errors about missing containers (`No such container: web1`), start them with:
+   ```bash
+   docker run -d --name web1 python:3 sleep infinity
+   docker run -d --name web2 python:3 sleep infinity
+   ```
+   This will create two test containers for Ansible to target.
+4. Then run:
+   ```bash
+   make ping     # or: ansible -i inventory.ini web -m ping -vv
+   make play     # or: ansible-playbook -i inventory.ini site.yml -vv
+   ```
+   > If a module needs Python inside the containers, run:
+   > ```bash
+   > INSTALL_PYTHON_IN_CONTAINERS=1 bash scripts/start_lab.sh
+   > ```
 2. When the dev container finishes building:
    ```bash
    bash scripts/start_lab.sh
