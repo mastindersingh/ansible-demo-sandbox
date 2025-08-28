@@ -1,0 +1,6 @@
+- name: Test Playbook
+  hosts: web
+  gather_facts: false
+  tasks:
+    - name: Ping test
+      ping:
