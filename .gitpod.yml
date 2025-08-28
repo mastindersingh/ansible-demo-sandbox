@@ -2,11 +2,13 @@ image:
   file: .gitpod.Dockerfile
 
 tasks:
-  - name: Setup Ansible
+  - name: Setup Ansible + Docker
     init: |
-      sudo apt update && sudo apt install -y ansible docker.io
+      sudo apt-get update
+      sudo apt-get install -y ansible python3-pip docker.io
+      python3 -m pip install --user docker
+      ansible-galaxy collection install community.docker
       sudo service docker start
-      docker run -d --name web1 ubuntu:20.04 sleep infinity
-      docker run -d --name web2 ubuntu:20.04 sleep infinity
+      bash scripts/start_lab.sh
     command: |
-      echo "Welcome to your Ansible Gitpod lab!"
+      echo "Ready. Try: make ping   or   make play"
